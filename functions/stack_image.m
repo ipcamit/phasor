@@ -1,0 +1,33 @@
+function [ output_args ] = stack_image(  )
+%take a series of images and stacks them in a file named img_stack.mat in data directory
+%   Detailed explanation goes here
+
+path=uigetdir;
+ser=input('intput name of the series\n','s');
+num=input('enter total number of images\n'); 
+%matname=input('enter output file name\n','s');
+
+for(i=1:num)
+    a=num2str(i);
+    if ifpc
+       file=strcat(path,'\',ser,a,'.tiff');   %change file name format here
+       img=im2double(imread(file));
+       stack(i).raw=img;
+       else
+         	file=strcat(path,'/',ser,a,'.tiff');    %change filename format here
+         	img=im2double(imread(file));
+         	stack(i).raw=img;  
+         end
+
+end
+
+
+
+clear a
+
+clear img
+
+cd ../data
+save('img_stack.mat')
+cd ../functions
+end
