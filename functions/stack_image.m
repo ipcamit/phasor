@@ -1,4 +1,4 @@
-function [ output_args ] = stack_image(  )
+function [ output_args ] = stack_image()
 %take a series of images and stacks them in a file named img_stack.mat in data directory
 %   Detailed explanation goes here
 
@@ -9,12 +9,12 @@ num=input('enter total number of images\n');
 
 for(i=1:num)
     a=num2str(i);
-    if ifpc
-       file=strcat(path,'\',ser,a,'.tiff');   %change file name format here
+    if ispc
+       file=strcat(path,'\',ser,a,'.tif');   %change file name format here
        img=im2double(imread(file));
        stack(i).raw=img;
        else
-         	file=strcat(path,'/',ser,a,'.tiff');    %change filename format here
+         	file=strcat(path,'/',ser,a,'.tif');    %change filename format here
          	img=im2double(imread(file));
          	stack(i).raw=img;  
          end

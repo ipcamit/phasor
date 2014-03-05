@@ -1,16 +1,21 @@
 function [] = fft_profiler(inputmat,outputmat)
 %   calculates rotationally averaged fft patterns
+
+ 
+
 cd ../data
-load(inputmat);
+load(inputmat)
 cd ../functions
 [sizex,sizey]=size(stack(1).raw);
+
 if sizex>1000
     c_size=1024;
 else
     c_size=512;
+end
+
 for count=1:num
-    
-    stackfft(count).raw=abs(fftshift(fft2(ham(imcrop(stack(count).raw, [0 0 c_size c_size])))));
+    stackfft(count).raw=abs(fftshift(fft2(ham(imresize(imcrop(stack(count).raw, [0 0 c_size c_size]),[512 512]))));
     stackfft(count).raw=log(1+stackfft(count).raw);
     [sx,sy]=size(stackfft(count).raw);
     [profile(count).raw,stackfft(count).smth]=rotavg(stackfft(count).raw);

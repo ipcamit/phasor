@@ -8,16 +8,15 @@ max_val(1:num)=0;
 defocus(1:num)=0;
 
 for imcount=1:num-1
-    
-    
+    im1=imcrop(stack(imcount).raw,[0 0 1024 1024]);
+    im2=imcrop(stack(imcount+1).raw,[0 0 1024 1024]);
     for def=1:.5:30
-        pmat=pcorr(stack(imcount).raw,stack(imcount+1).raw,def,c_size);
+        pmat=phasepcorr(im1,im2,def);
         maxi=max(abs(pmat(:)));
         if(max_val(imcount)<maxi)
             max_val(imcount)=maxi;
             defocus(imcount)=def;
-        end
-    def    
+        end   
     end
     imcount
 end

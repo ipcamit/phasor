@@ -1,4 +1,4 @@
-function [] =img_align(inp,oup)
+function [] =img_align_backup(inp,oup)
 	cd data
 	load(inp)
     load('r_defocus.mat','defocus')
