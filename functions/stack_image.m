@@ -1,7 +1,7 @@
 function [ output_args ] = stack_image()
 %take a series of images and stacks them in a file named img_stack.mat in data directory
 %Stack_image function will be used to load the image series in MATLAB
-
+%if get time will try to make it name and os independent
 path=uigetdir;
 ser=input('intput name of the series\n','s');
 num=input('enter total number of images\n'); 
