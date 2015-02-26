@@ -1,30 +1,8 @@
 function varargout = temdatagui(varargin)
-% TEMDATAGUI MATLAB code for temdatagui.fig
-%      TEMDATAGUI, by itself, creates a new TEMDATAGUI or raises the existing
-%      singleton*.
-%
-%      H = TEMDATAGUI returns the handle to a new TEMDATAGUI or the handle to
-%      the existing singleton*.
-%
-%      TEMDATAGUI('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in TEMDATAGUI.M with the given input arguments.
-%
-%      TEMDATAGUI('Property','Value',...) creates a new TEMDATAGUI or raises the
-%      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before temdatagui_OpeningFcn gets called.  An
-%      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to temdatagui_OpeningFcn via varargin.
-%
-%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
-%      instance to run (singleton)".
-%
-% See also: GUIDE, GUIDATA, GUIHANDLES
 
-% Edit the above text to modify the response to help temdatagui
 
-% Last Modified by GUIDE v2.5 25-Feb-2015 00:54:56
 
-% Begin initialization code - DO NOT EDIT
+
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
@@ -101,7 +79,14 @@ function popupmenu1_Callback(hObject, eventdata, handles)
 % hObject    handle to popupmenu1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+option = get(hObject,'Value');
+display(option);
+switch option
+  case 1
+    display('1500000X');
+  otherwise
+    display('otherthings');
+end
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu1
 
@@ -117,3 +102,25 @@ function popupmenu1_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on mouse press over figure background, over a disabled or
+% --- inactive control, or over an axes background.
+function figure1_WindowButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbutton1.
+function pushbutton1_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbutton2.
+function pushbutton2_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
