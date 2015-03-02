@@ -1,4 +1,5 @@
 function varargout = temdatagui(varargin)
+%temdatagui is called as the fist function in the programme. It is used to gather all the data from the user
 
 
 
@@ -50,6 +51,7 @@ function varargout = temdatagui_OutputFcn(hObject, eventdata, handles)
 % Get default command line output from handles structure
 varargout{1} = handles.output;
 
+%-----------------------------------------------------------------------------------------------------------------------------
 
 
 function edit1_Callback(hObject, eventdata, handles)
@@ -60,6 +62,7 @@ function edit1_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of edit1 as text
 %        str2double(get(hObject,'String')) returns contents of edit1 as a double
 
+%-----------------------------------------------------------------------------------------------------------------------------
 
 % --- Executes during object creation, after setting all properties.
 function edit1_CreateFcn(hObject, eventdata, handles)
@@ -73,6 +76,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
+%-----------------------------------------------------------------------------------------------------------------------------
 
 % --- Executes on selection change in popupmenu1.
 function popupmenu1_Callback(hObject, eventdata, handles)
@@ -83,13 +87,22 @@ option = get(hObject,'Value');
 display(option);
 switch option
   case 1
-    display('1500000X');
-  otherwise
-    display('otherthings');
+    resolution=12.75*10^-12;
+  case 2
+    resolution=15.14*10^-12;
+  case 3
+    resolution=17.93*10^-12;
+  case 4
+    resolution=23.71*10^-12;
+  case 5
+    resolution=31.08*10^-12;    
 end
+global temdata;
+temdata.ca=resolution;
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu1
 
+%-----------------------------------------------------------------------------------------------------------------------------
 
 % --- Executes during object creation, after setting all properties.
 function popupmenu1_CreateFcn(hObject, eventdata, handles)
@@ -103,6 +116,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
+%-----------------------------------------------------------------------------------------------------------------------------
 
 % --- Executes on mouse press over figure background, over a disabled or
 % --- inactive control, or over an axes background.
@@ -111,16 +125,61 @@ function figure1_WindowButtonDownFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-
+%-----------------------------------------------------------------------------------------------------------------------------
 % --- Executes on button press in pushbutton1.
 function pushbutton1_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+button = questdlg('Please make sure all the images are in serial order, done?');
+switch button
+  case 'Yes'
+  
+  case 'No'
+    msgbox('Please rearrange and rename images in acending order first and the restart the program');
+    error('Program closed for sequential images');
+  case 'Cancel'
+    error('Cancelled by user')
+  end
+path=uigetdir;
+%ser=char(inputdlg('intput name of the series','s'));
+%num=str2double(inputdlg('enter total number of images')); 
+filelist=dir(path);
+
+if ispc
+  slash='\'; %to maintain compatibility in linux and window systems. yet to be checked in linux
+else
+  slash='/';
+end
+imgNumber=1;
+for(i=1:max(size(filelist)))
+  
+  if filelist(i).isdir==1
+    continue
+  else
+    display('file')
+    stack(imgNumber).raw=im2double(imread(strcat(path,slash,char(filelist(i).name))));
+    imgNumber=imgNumber+1;
+  end
+end
+imgNumber=imgNumber-1;
+cd ../usr_data
+save('img_stack.mat')
+cd ../functions
 
 
+%-----------------------------------------------------------------------------------------------------------------------------
 % --- Executes on button press in pushbutton2.
 function pushbutton2_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+% handles    structure with handles and user data
+switch get(get(handles.uipanel1,'SelectedObject'),'Tag')
+case 'binning1'
+  display('binning1');global temdata;temdata.binning=1;
+case 'binning2'
+  display('binning2');global temdata;temdata.binning=2;
+end
+cd ../usr_data
+save('datatem.mat','temdata')
+cd ../functions
