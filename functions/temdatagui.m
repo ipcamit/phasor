@@ -58,7 +58,8 @@ function edit1_Callback(hObject, eventdata, handles)
 % hObject    handle to edit1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+global temdata;
+temdata.cs = str2double(get(hObject,'String'));
 % Hints: get(hObject,'String') returns contents of edit1 as text
 %        str2double(get(hObject,'String')) returns contents of edit1 as a double
 
@@ -84,7 +85,6 @@ function popupmenu1_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 option = get(hObject,'Value');
-display(option);
 switch option
   case 1
     resolution=12.75*10^-12;
@@ -183,7 +183,7 @@ check_existing_file=dir('../usr_data');
 data_tem=0;
 data_img=0;
 for counter=1:max(size(check_existing_file))
-  if check_existing_file(counter).isdir==0
+    if check_existing_file(counter).isdir==0
     if strcmp(char(check_existing_file(counter).name),'datatem.mat')
       data_tem=1;
     elseif strcmp(char(check_existing_file(counter).name),'img_stack.mat')
@@ -191,8 +191,9 @@ for counter=1:max(size(check_existing_file))
     end
   end
 end
-if data_tem+data_img>0
-  no_data_choice=questdlg('No data or image files were found in usr_data directory. Would you like to enter them? Press "No" for exiting the program');
+
+if (data_tem+data_img)<2
+  no_data_choice=questdlg('No data or image files were found in usr_data directory. Please press save data button to save current setting. Press Yes to enter image folder? Press "No" for exiting the program');
 
   switch no_data_choice
     case 'Yes'
@@ -200,11 +201,26 @@ if data_tem+data_img>0
       
     otherwise
       msgbox('Exiting the program. No data provided')
-      error('No user data')
-      
+      error('No user data')    
   end
+else
+  msgbox('Calculating defocus and stuff... It will take time, take a break')
+  dummy_function()
 end
 
-cd ../usr_data
-save('datatem.mat','temdata')
-cd ../functions
+
+
+
+% --- Executes on button press in pushbutton3.
+function pushbutton3_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global temdata;
+if isfield(temdata,'cs')
+  cd ../usr_data
+  save('datatem.mat','temdata')
+  cd ../functions
+else
+  msgbox('Please eneter proper value for sperical aberration coefficient and press save again')
+end
