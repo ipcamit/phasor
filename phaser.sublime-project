@@ -1,0 +1,17 @@
+{
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"path": "functions"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "common_data"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "usr_data"
+		}
+	]
+}
