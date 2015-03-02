@@ -157,7 +157,6 @@ for(i=1:max(size(filelist)))
   if filelist(i).isdir==1
     continue
   else
-    display('file')
     stack(imgNumber).raw=im2double(imread(strcat(path,slash,char(filelist(i).name))));
     imgNumber=imgNumber+1;
   end
@@ -176,10 +175,36 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data
 switch get(get(handles.uipanel1,'SelectedObject'),'Tag')
 case 'binning1'
-  display('binning1');global temdata;temdata.binning=1;
+  global temdata;temdata.binning=1;
 case 'binning2'
-  display('binning2');global temdata;temdata.binning=2;
+  global temdata;temdata.binning=2;
 end
+check_existing_file=dir('../usr_data');
+data_tem=0;
+data_img=0;
+for counter=1:max(size(check_existing_file))
+  if check_existing_file(counter).isdir==0
+    if strcmp(char(check_existing_file(counter).name),'datatem.mat')
+      data_tem=1;
+    elseif strcmp(char(check_existing_file(counter).name),'img_stack.mat')
+      data_img=1;
+    end
+  end
+end
+if data_tem+data_img>0
+  no_data_choice=questdlg('No data or image files were found in usr_data directory. Would you like to enter them? Press "No" for exiting the program');
+
+  switch no_data_choice
+    case 'Yes'
+      pushbutton1_Callback(hObject, eventdata, handles)
+      
+    otherwise
+      msgbox('Exiting the program. No data provided')
+      error('No user data')
+      
+  end
+end
+
 cd ../usr_data
 save('datatem.mat','temdata')
 cd ../functions
