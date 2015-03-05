@@ -4,9 +4,24 @@ function [pmat] = phasepcorr( im1,im2,d)
 %   arguement for using it in phase compensation
 
 
-cd ../data
-load('datatem2d.mat','k');
+cd ../usr_data
+load('datatem.mat','temdata')
 cd ../functions
+m=1024;
+Ca=temdata.ca;
+if(mod(m,2)==0)
+ zro = m/2+0.5;
+ ind = m/2;
+else 
+  zro = ceil(m/2); 
+  ind=m/2+.05;
+end
+
+[i,j] = meshgrid(1:m); 
+r = ((i-zro).^2 + (j-zro).^2).^(0.5); 
+k = r./(m*Ca);
+j=flipud(j);
+ang = atan2((j-zro),(i-zro));
 %k=k*10^-9;
 d=d*10^-9;
 gamma=pi*d*2.51*10^-12*(k.*k);
