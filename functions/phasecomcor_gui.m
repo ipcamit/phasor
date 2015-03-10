@@ -25,13 +25,6 @@ end
 
 % --- Executes just before phasecomcor_gui is made visible.
 function phasecomcor_gui_OpeningFcn(hObject, eventdata, handles, varargin)
-% This function has no output args, see OutputFcn.
-% hObject    handle to figure
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to phasecomcor_gui (see VARARGIN)
-
-% Choose default command line output for phasecomcor_gui
 handles.output = hObject;
 cd ../usr_data
 load ('img_stack.mat','stack')
@@ -42,46 +35,50 @@ axes(handles.image1);
 imshow(handles.img1,[]);
 axes(handles.image2);
 imshow(handles.img2,[]);
+set(handles.edit2,'String','25');
+set(handles.edit1,'String','-25');
+set(handles.slider1,'Max',25);
+set(handles.slider1,'Min',-25);
 
-% Update handles structure
 guidata(hObject, handles);
-
-% UIWAIT makes phasecomcor_gui wait for user response (see UIRESUME)
-% uiwait(handles.figure1);
+% ----------------------------------------------------------------------------------------------
 
 
-% --- Outputs from this function are returned to the command line.
+
+
+
 function varargout = phasecomcor_gui_OutputFcn(hObject, eventdata, handles) 
-% varargout  cell array for returning output args (see VARARGOUT);
-% hObject    handle to figure
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Get default command line output from handles structure
 varargout{1} = handles.output;
+% ----------------------------------------------------------------------------------------------
 
 
 % --- Executes on slider movement.
 function slider1_Callback(hObject, eventdata, handles)
-% hObject    handle to slider1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 df=get(handles.slider1,'Value');
-pmat=phasepcorr(handles.img1,handles.img2,df);
+pmat=abs(phasepcorr(handles.img1,handles.img2,df));
+pmat_zoom=pmat(256:(512+256),256:(512+256));
+[maximum,index]=max(pmat_zoom(:));
+max_loc_x=ind2sub(index,size(pmat_zoom));
+overlav_mat=ones(size(pmat_zoom));overlav_mat((max_loc_x(1)-256),:)=0;
+%size(pmat_zoom)
+%size(overlav_mat)
 axes(handles.axes3)
-imshow(((abs(pmat))).^.1,[])
-handles.maxh=max(pmat(:))^.1;
+rgb = ind2rgb(gray2ind((((abs(pmat_zoom)))./abs(max(pmat_zoom(:))))*250.*overlav_mat,255),winter(255));
+imshow(rgb,[])
+handles.maxh=max(pmat(:));
+axes(handles.axes4)
+plot((pmat_zoom(max_loc_x(1),:)))
 a=num2str(handles.maxh);
-set(handles.text1,'String',a);
+set(handles.text1,'String',a);  
 
 
 guidata(hObject,handles);
 
-% Hints: get(hObject,'Value') returns position of slider
-%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
 
-% --- Executes during object creation, after setting all properties.
+% ----------------------------------------------------------------------------------------------
+
+
 function slider1_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to slider1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -92,83 +89,66 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
 
+% ----------------------------------------------------------------------------------------------
 
 
 function edit1_Callback(hObject, eventdata, handles)
-% hObject    handle to edit1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+
 minval=get(handles.edit1,'String');
 minval=str2double(minval);
 set(handles.slider1,'Min',minval);
 guidata(hObject,handles);
-% Hints: get(hObject,'String') returns contents of edit1 as text
-%        str2double(get(hObject,'String')) returns contents of edit1 as a double
 
 
-% --- Executes during object creation, after setting all properties.
+
+% ----------------------------------------------------------------------------------------------
+
 function edit1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
 
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
 
+% ----------------------------------------------------------------------------------------------
 
 
 function edit2_Callback(hObject, eventdata, handles)
-% hObject    handle to edit2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 maxval=get(handles.edit2,'String');
 maxval=str2double(maxval);
 set(handles.slider1,'Max',maxval);
 guidata(hObject,handles);
-% Hints: get(hObject,'String') returns contents of edit2 as text
-%        str2double(get(hObject,'String')) returns contents of edit2 as a double
 
 
-% --- Executes during object creation, after setting all properties.
+
+% ----------------------------------------------------------------------------------------------
+
 function edit2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
 
 
+% ----------------------------------------------------------------------------------------------
+
+
 % --- Executes on button press in pushbutton1.
 function pushbutton1_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+% ----------------------------------------------------------------------------------------------
 
 
-% --- Executes on slider movement.
+
+
+
 function slider2_Callback(hObject, eventdata, handles)
-% hObject    handle to slider2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'Value') returns position of slider
-%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+% ----------------------------------------------------------------------------------------------
 
 
-% --- Executes during object creation, after setting all properties.
+
+
+
+
+
 function slider2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to slider2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: slider controls usually have a light gray background.
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
