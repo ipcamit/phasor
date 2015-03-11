@@ -1,7 +1,7 @@
 function varargout = phasecomcor_gui(varargin)
 % phasecomcor_gui compares 2 images' phase correlation function 
 
-% Last Modified by GUIDE v2.5 04-Mar-2015 01:09:20
+% Last Modified by GUIDE v2.5 10-Mar-2015 19:14:32
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -39,6 +39,8 @@ set(handles.edit2,'String','25');
 set(handles.edit1,'String','-25');
 set(handles.slider1,'Max',25);
 set(handles.slider1,'Min',-25);
+set(handles.slider2,'Max',1000);
+set(handles.slider2,'Min',1);
 
 guidata(hObject, handles);
 % ----------------------------------------------------------------------------------------------
@@ -80,11 +82,7 @@ guidata(hObject,handles);
 
 
 function slider1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to slider1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: slider controls usually have a light gray background.
+.
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
@@ -141,7 +139,22 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 
 function slider2_Callback(hObject, eventdata, handles)
 % ----------------------------------------------------------------------------------------------
-
+df=get(handles.slider1,'Value');
+pmat=abs(phasepcorr(handles.img1,handles.img2,df));
+pmat_zoom=pmat(256:(512+256),256:(512+256));
+[maximum,index]=max(pmat_zoom(:));
+max_loc_x=ind2sub(index,size(pmat_zoom));
+overlav_mat=ones(size(pmat_zoom));overlav_mat((max_loc_x(1)-256),:)=0;
+%size(pmat_zoom)
+%size(overlav_mat)
+axes(handles.axes3)
+rgb = ind2rgb(gray2ind((((abs(pmat_zoom)))./abs(max(pmat_zoom(:))))*250.*overlav_mat,255),winter(255));
+imshow(rgb,[])
+handles.maxh=max(pmat(:));
+axes(handles.axes4)
+plot((pmat_zoom(max_loc_x(1),:)))
+a=num2str(handles.maxh);
+set(handles.text1,'String',a);
 
 
 
@@ -151,4 +164,27 @@ function slider2_Callback(hObject, eventdata, handles)
 function slider2_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+% ----------------------------------------------------------------------------------------------
+
+% --- Executes on selection change in popupmenu1.
+function popupmenu1_Callback(hObject, eventdata, handles)
+special_function=get(hObject,'Value')
+switch special_function
+  case 'Gaussian'
+    handles.winfun=1;
+  case 'Sine'
+    handles.winfun=2;
+  case 'Circular window'
+    handles.winfun=3;
+end
+
+% ----------------------------------------------------------------------------------------------
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu1_CreateFcn(hObject, eventdata, handles)
+
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
 end
