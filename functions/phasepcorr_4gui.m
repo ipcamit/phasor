@@ -29,7 +29,17 @@ b=cos(gamma);
 %figure;imshow(b,[]);
 c=fftshift(b);
 %a=1;
-a=fspecial('gaussian',[1024 1024],window_size);
+display(fn)
+switch fn
+  case 1
+  	a=fspecial('gaussian',[1024 1024],window_size);
+  case 1
+    display 'Sine'
+  case 3
+  	padding=1024-window_size
+    a=padarray(fspecial('disk',window_size),[padding padding]);
+end
+%a=fspecial('gaussian',[1024 1024],window_size);
 a=fftshift(a);
 x=ham((im1));
 y=ham((im2));

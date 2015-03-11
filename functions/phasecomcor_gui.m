@@ -39,9 +39,11 @@ set(handles.edit2,'String','25');
 set(handles.edit1,'String','-25');
 set(handles.slider1,'Max',25);
 set(handles.slider1,'Min',-25);
+set(handles.slider2,'Value',1);
 set(handles.slider2,'Max',1000);
 set(handles.slider2,'Min',1);
-
+set(handles.slider2,'SliderStep',[1 10])
+handles.winfun=get(handles.popupmenu1,'Value');
 guidata(hObject, handles);
 % ----------------------------------------------------------------------------------------------
 
@@ -56,8 +58,7 @@ varargout{1} = handles.output;
 
 % --- Executes on slider movement.
 function slider1_Callback(hObject, eventdata, handles)
-df=get(handles.slider1,'Value');
-pmat=abs(phasepcorr(handles.img1,handles.img2,df));
+pmat=abs(phasepcorr_4gui(handles.img1,handles.img2,get(handles.slider1,'Value'),get(handles.popupmenu1,'Value'),get(handles.slider2,'Value')));
 pmat_zoom=pmat(256:(512+256),256:(512+256));
 [maximum,index]=max(pmat_zoom(:));
 max_loc_x=ind2sub(index,size(pmat_zoom));
@@ -82,7 +83,6 @@ guidata(hObject,handles);
 
 
 function slider1_CreateFcn(hObject, eventdata, handles)
-.
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
@@ -139,8 +139,7 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 
 function slider2_Callback(hObject, eventdata, handles)
 % ----------------------------------------------------------------------------------------------
-df=get(handles.slider1,'Value');
-pmat=abs(phasepcorr(handles.img1,handles.img2,df));
+pmat=abs(phasepcorr_4gui(handles.img1,handles.img2,get(handles.slider1,'Value'),get(handles.popupmenu1,'Value'),get(handles.slider2,'Value')));
 pmat_zoom=pmat(256:(512+256),256:(512+256));
 [maximum,index]=max(pmat_zoom(:));
 max_loc_x=ind2sub(index,size(pmat_zoom));
@@ -154,8 +153,10 @@ handles.maxh=max(pmat(:));
 axes(handles.axes4)
 plot((pmat_zoom(max_loc_x(1),:)))
 a=num2str(handles.maxh);
-set(handles.text1,'String',a);
+set(handles.text1,'String',a);  
 
+
+guidata(hObject,handles);
 
 
 
@@ -170,15 +171,7 @@ end
 
 % --- Executes on selection change in popupmenu1.
 function popupmenu1_Callback(hObject, eventdata, handles)
-special_function=get(hObject,'Value')
-switch special_function
-  case 'Gaussian'
-    handles.winfun=1;
-  case 'Sine'
-    handles.winfun=2;
-  case 'Circular window'
-    handles.winfun=3;
-end
+
 
 % ----------------------------------------------------------------------------------------------
 
