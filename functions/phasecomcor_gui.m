@@ -42,7 +42,7 @@ set(handles.slider1,'Min',-25);
 set(handles.slider2,'Value',1);
 set(handles.slider2,'Max',1000);
 set(handles.slider2,'Min',1);
-set(handles.slider2,'SliderStep',[1 10])
+set(handles.slider2,'SliderStep',[1/999 1/999])
 handles.winfun=get(handles.popupmenu1,'Value');
 guidata(hObject, handles);
 % ----------------------------------------------------------------------------------------------

@@ -29,15 +29,18 @@ b=cos(gamma);
 %figure;imshow(b,[]);
 c=fftshift(b);
 %a=1;
-display(fn)
 switch fn
   case 1
   	a=fspecial('gaussian',[1024 1024],window_size);
-  case 1
-    display 'Sine'
+  case 2
+    a=rotavg(chebwin(1024,ceil(window_size)));
   case 3
-  	padding=1024-window_size
-    a=padarray(fspecial('disk',window_size),[padding padding]);
+  	padding=512-max([floor(window_size/2) 1]);
+    a=padarray(fspecial('disk',max([floor(window_size/2) 1])),[padding padding]);
+    a(1025,:)=[];a(:,1025)=[];
+  case 4
+  	a=rotavg([zeros(1,1023-ceil(window_size/2)),fliplr(cos(([0:1/ceil(window_size/2):1]).*pi/2)), cos(([0:1/ceil(window_size/2):1]).*pi/2), zeros(1,1024-ceil(window_size/2))]);
+
 end
 %a=fspecial('gaussian',[1024 1024],window_size);
 a=fftshift(a);
