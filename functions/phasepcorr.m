@@ -23,20 +23,20 @@ k = r./(m*Ca);
 %------------------------------------------------------------------------------------
 [sx,sy]=size(im1);
 
-d=d*10^-9;
-gamma=pi*d*2.51*10^-12*(k.*k);
-b=cos(gamma);
-%figure;imshow(b,[]);
-c=fftshift(b);
+%d=d*10^-9;
+%gamma=pi*d*2.51*10^-12*(k.*k);
+%b=cos(gamma);
+%%figure;imshow(b,[]);
+%c=fftshift(b);
 %a=1;
-a=fspecial('gaussian',[1024 1024],500);
-a=fftshift(a);
-x=ham((im1));
-y=ham((im2));
-x_fft=(fft2(x));
+%a=fftshift(fspecial('gaussian',[1024 1024],500));
+
+%x=ham((im1));
+%y=ham((im2));
+%x_fft=fft2(ham((im1)));
 %figure;imshow(x_fft.^.02,[]);
-y_fft=conj((fft2(y)));
+%y_fft=conj((fft2(ham((im2)))));
 %figure;imshow(y_fft.^.02,[]);
 
-pmat=ifftshift(ifft2(a.*((c.*x_fft.*y_fft)./abs(c.*(x_fft.*y_fft)+.000000001))));
+pmat=ifftshift(ifft2(fftshift(fspecial('gaussian',[1024 1024],500)).*((fftshift(cos(pi*d*10^-9*2.51*10^-12*(k.*k))).*fft2(ham((im1))).*conj((fft2(ham((im2))))))./abs(fftshift(cos(pi*d*10^-9*2.51*10^-12*(k.*k))).*(fft2(ham((im1))).*conj((fft2(ham((im2))))))+.000000001))));
 end
