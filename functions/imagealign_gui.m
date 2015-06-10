@@ -95,7 +95,11 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 
 % --- Executes on button press in pushbutton3.
 function pushbutton3_Callback(hObject, eventdata, handles)
-guidata(hObject,handles)
+	h=msgbox('Generating FFT pattern for all images, it might take a little while');
+	fft_profiler('img_stack.mat','fft_stack.mat')
+	close(h)
+	defocus_estimation
+	guidata(hObject,handles)
 %--------------------------------------------------------------------------------
 
 

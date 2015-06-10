@@ -6,7 +6,7 @@ function [ctf1d] = waf1d(df1)
 %   abberation to be zero. Asks for defocus and azmuthal angle( for
 %   astigmatism), spherical abberation constant and chromatic abberation
 %   constant.
-cd ../data
+cd ../usr_data
 load datatem.mat;
 cd ../functions
 df=df1*10^-9;

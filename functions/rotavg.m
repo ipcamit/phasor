@@ -32,7 +32,7 @@ if ~((test_size(1)==1)||(test_size(2)==1))
 	for r=0:N/2
 	    avg_mat(i{r+1})=f(r+1);
 	end
-	varargout{1}=h;
+	varargout{1}=f;
 else
 	N=1024;
 	array(1:511)=[];

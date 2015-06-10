@@ -1,4 +1,4 @@
-function varargout = temdata_gui(varargin)
+function varargout = temdatagui(varargin)
 %temdatagui is called as the fist function in the programme. It is used to gather all the data from the user
   
   
@@ -53,7 +53,7 @@ function varargout = temdatagui_OutputFcn(hObject, eventdata, handles)
 function edit1_Callback(hObject, eventdata, handles)
 
   global temdata;
-  temdata.cs = str2double(get(hObject,'String'));
+  temdata.cs = str2double(get(hObject,'String'))*10^-3;
   % Hints: get(hObject,'String') returns contents of edit1 as text
   %        str2double(get(hObject,'String')) returns contents of edit1 as a double
   
@@ -153,12 +153,6 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % --- Executes on button press in pushbutton2.
 function pushbutton2_Callback(hObject, eventdata, handles)
   
-  switch get(get(handles.uipanel1,'SelectedObject'),'Tag')
-  case 'binning1'
-    global temdata;temdata.binning=1;
-  case 'binning2'
-    global temdata;temdata.binning=2;
-  end
   check_existing_file=dir('../usr_data');
   data_tem=0;
   data_img=0;
@@ -194,6 +188,16 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 function pushbutton3_Callback(hObject, eventdata, handles)
   
   global temdata;
+  
+  switch get(get(handles.uipanel1,'SelectedObject'),'Tag')
+  case 'binning1'
+    global temdata;temdata.binning=1;
+    display('1');
+  case 'binning2'
+    global temdata;temdata.binning=2;
+    display('2');  
+  end
+
   if (isfield(temdata,'cs'))&(isfield(temdata,'bet'))&(isfield(temdata,'delt'))
     cd ../usr_data
     save('datatem.mat','temdata')

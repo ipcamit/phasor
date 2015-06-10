@@ -5,7 +5,7 @@ cd ../usr_data
 load(inp,'stack')
 load('datatem.mat','temdata')
 cd ../functions
-m=1024;n=1024;
+m=1024/temdata.binning;n=1024/temdata.binning;
 Ca=temdata.ca;
 if(mod(m,2)==0)
  zro = m/2+0.5;
@@ -27,10 +27,10 @@ defocus(1:num)=0;
 h=waitbar(0,['Finding approximate defocus for better alignment, please wait... ']);
 tic
 for imcount=1:num-1
-    im1=imcrop(stack(imcount).raw,[0 0 1024 1024]);
-    im2=imcrop(stack(imcount+1).raw,[0 0 1024 1024]);
+    im1=imcrop(stack(imcount).raw,[0 0 m m]);
+    im2=imcrop(stack(imcount+1).raw,[0 0 m m]);
     for def=1:1:df_range
-        pmat=abs(ifftshift(ifft2(fftshift(fspecial('gaussian',[1024 1024],500)).*...
+        pmat=abs(ifftshift(ifft2(fftshift(fspecial('gaussian',[m m],500)).*...
         ((fftshift(cos(pi*def*10^-9*2.51*10^-12*(k.*k))).*fft2(ham((im1))).*...
             conj((fft2(ham((im2))))))./abs(fftshift(cos(pi*def*10^-9*2.51*10^-12.*...
                 (k.*k))).*(fft2(ham((im1))).*conj((fft2(ham((im2))))))+.000000001)))));;
