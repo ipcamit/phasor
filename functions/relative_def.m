@@ -5,7 +5,7 @@ cd ../usr_data
 load(inp,'stack')
 load('datatem.mat','temdata')
 cd ../functions
-m=1024/temdata.binning;n=1024/temdata.binning;
+m=1024/temdata.binning; n=1024/temdata.binning;
 Ca=temdata.ca;
 if(mod(m,2)==0)
  zro = m/2+0.5;

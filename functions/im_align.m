@@ -6,6 +6,13 @@ function [] =img_align(inp,oup,crop_coordinates)
     %display('this is working function')
 	msg=msgbox('Aligning images, please wait...');
 	num=max(size(stack));
+
+	if(max(stack(1).raw)>1000)
+		bin_int=1;
+	else
+		bin_int=2;
+	end
+
 	for count=1:num-1
     	%image=count
 		if count==1
@@ -13,9 +20,9 @@ function [] =img_align(inp,oup,crop_coordinates)
 		else
     		[baseimg,img_pos]=imcrop(stack(count).raw,img_pos);
 		end
-	
-		temp_im1=imcrop(stack(count).raw,[0 0 520 520]);
-		temp_im2=imcrop(stack(count+1).raw,[0 0 520 520]);
+
+		temp_im1=imcrop(stack(count).raw,[0 0 512/bin_int 512/bin_int]);
+		temp_im2=imcrop(stack(count+1).raw,[0 0 512/bin_int 512/bin_int]);
 		
 		base_peak=pcorr(temp_im1,temp_im1,0);
 		[base_val, base_ind]=max(base_peak(:));    

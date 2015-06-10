@@ -13,7 +13,7 @@ function [] = fft_profiler(inputmat,outputmat)
     else
         c_size=512;
     end
-    num=max(size(stack))
+    num=max(size(stack));
     for count=1:num
         stackfft(count).raw=abs(fftshift(fft2(ham(imresize(imcrop(stack(count).raw, [0 0 c_size c_size]),[512 512])))));
         stackfft(count).raw=log(1+stackfft(count).raw);

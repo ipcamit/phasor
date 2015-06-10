@@ -158,11 +158,11 @@ function pushbutton2_Callback(hObject, eventdata, handles)
   data_img=0;
   for counter=1:max(size(check_existing_file))
       if check_existing_file(counter).isdir==0
-      if strcmp(char(check_existing_file(counter).name),'datatem.mat')
-        data_tem=1;
-      elseif strcmp(char(check_existing_file(counter).name),'img_stack.mat')
-        data_img=1;
-      end
+        if strcmp(char(check_existing_file(counter).name),'datatem.mat')
+          data_tem=1;
+        elseif strcmp(char(check_existing_file(counter).name),'img_stack.mat')
+          data_img=1;
+        end
     end
   end
   
@@ -192,12 +192,10 @@ function pushbutton3_Callback(hObject, eventdata, handles)
   switch get(get(handles.uipanel1,'SelectedObject'),'Tag')
   case 'binning1'
     global temdata;temdata.binning=1;
-    display('1');
   case 'binning2'
     global temdata;temdata.binning=2;
-    display('2');  
   end
-
+  temdata.lambda=2.74*10^(-12);
   if (isfield(temdata,'cs'))&(isfield(temdata,'bet'))&(isfield(temdata,'delt'))
     cd ../usr_data
     save('datatem.mat','temdata')

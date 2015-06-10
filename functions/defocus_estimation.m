@@ -27,7 +27,7 @@ function defocus_estimation_OpeningFcn(hObject, eventdata, handles, varargin)
   %handles.img=im2double(im1);
 %-----------------------------------------------------------
   load('datatem.mat','temdata')
-    m=1024;
+    m=1024/temdata.binning;
     Ca=temdata.ca;
     if(mod(m,2)==0)
      zro = m/2+0.5;
