@@ -25,19 +25,12 @@ function varargout = temdatagui(varargin)
 
 % --- Executes just before temdatagui is made visible.
 function temdatagui_OpeningFcn(hObject, eventdata, handles, varargin)
-  % This function has no output args, see OutputFcn.
-  % hObject    handle to figure
-  % eventdata  reserved - to be defined in a future version of MATLAB
-  % handles    structure with handles and user data (see GUIDATA)
-  % varargin   command line arguments to temdatagui (see VARARGIN)
-  
-  % Choose default command line output for temdatagui
+ 
   handles.output = hObject;
   % Update handles structure
   guidata(hObject, handles);
 
-% UIWAIT makes temdatagui wait for user response (see UIRESUME)
-% uiwait(handles.figure1);
+
 
 
 % --- Outputs from this function are returned to the command line.
@@ -54,8 +47,7 @@ function edit1_Callback(hObject, eventdata, handles)
 
   global temdata;
   temdata.cs = str2double(get(hObject,'String'))*10^-3;
-  % Hints: get(hObject,'String') returns contents of edit1 as text
-  %        str2double(get(hObject,'String')) returns contents of edit1 as a double
+  
   
   %-----------------------------------------------------------------------------------------------------------------------------
 
@@ -63,8 +55,7 @@ function edit1_Callback(hObject, eventdata, handles)
 function edit1_CreateFcn(hObject, eventdata, handles)
   
   
-  % Hint: edit controls usually have a white background on Windows.
-  %       See ISPC and COMPUTER.
+  
   if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
       set(hObject,'BackgroundColor','white');
   end
@@ -89,8 +80,7 @@ function popupmenu1_Callback(hObject, eventdata, handles)
   end
   global temdata;
   temdata.ca=resolution;
-  % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
-  %        contents{get(hObject,'Value')} returns selected item from popupmenu1
+  
 
 %-----------------------------------------------------------------------------------------------------------------------------
 
@@ -104,8 +94,7 @@ function popupmenu1_CreateFcn(hObject, eventdata, handles)
   
 %-----------------------------------------------------------------------------------------------------------------------------
 
-% --- Executes on mouse press over figure background, over a disabled or
-% --- inactive control, or over an axes background.
+
 function figure1_WindowButtonDownFcn(hObject, eventdata, handles)
 
 
@@ -127,7 +116,7 @@ function pushbutton1_Callback(hObject, eventdata, handles)
   %ser=char(inputdlg('intput name of the series','s'));
   %num=str2double(inputdlg('enter total number of images')); 
   filelist=dir(path);
-  
+  filelist.name
   if ispc
     slash='\'; %to maintain compatibility in linux and window systems. yet to be checked in linux
   else
@@ -197,6 +186,7 @@ function pushbutton3_Callback(hObject, eventdata, handles)
   end
   temdata.lambda=2.74*10^(-12);
   if (isfield(temdata,'cs'))&(isfield(temdata,'bet'))&(isfield(temdata,'delt'))
+    temdata.ca=temdata.ca*temdata.binning;
     cd ../usr_data
     save('datatem.mat','temdata')
     cd ../functions
@@ -210,16 +200,14 @@ function edit2_Callback(hObject, eventdata, handles)
   
   global temdata;
   temdata.delt = str2double(get(hObject,'String'));
+  temdata.delt=temdata.delt*10^-9; %convert to nanometer
   
-  % Hints: get(hObject,'String') returns contents of edit2 as text
-  %        str2double(get(hObject,'String')) returns contents of edit2 as a double
   
 
-% --- Executes during object creation, after setting all properties.
+
 function edit2_CreateFcn(hObject, eventdata, handles)
 
-  % Hint: edit controls usually have a white background on Windows.
-  %       See ISPC and COMPUTER.
+ 
   if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
       set(hObject,'BackgroundColor','white');
   end
@@ -230,12 +218,11 @@ function edit3_Callback(hObject, eventdata, handles)
 
   global temdata;
   temdata.bet = str2double(get(hObject,'String'));
-  
-% Hints: get(hObject,'String') returns contents of edit3 as text
-%        str2double(get(hObject,'String')) returns contents of edit3 as a double
+  temdata.bet = temdata.bet*10^-3; %convert to milirad
 
 
-% --- Executes during object creation, after setting all properties.
+
+
 function edit3_CreateFcn(hObject, eventdata, handles)
   
   if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))

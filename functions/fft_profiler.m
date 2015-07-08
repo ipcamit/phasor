@@ -27,8 +27,8 @@ function [] = fft_profiler(inputmat,outputmat)
         profile(count).smth=profile(count).smth(512/2:-1:1);
         %profile(count).smth=fliplr(profile(count).smth);
         profile(count).smth((512/2)+1:512)=dummy;
-        stackfft(count).smth=[];
-        stackfft(count).raw=[];
+        %stackfft(count).smth=[];
+        %stackfft(count).raw=[];
     end
     
     clear stack;

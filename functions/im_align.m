@@ -77,14 +77,15 @@ function [] =img_align(inp,oup,crop_coordinates)
 		else
 		    stack2(count+1).raw=img2;
     	end
-       
+       display(count)
 			
     end
-    cd ../usr_data
-	save(oup)
-	cd ../functions
+
     if exist('msg', 'var')
 		delete(msg);
 		clear('msg');
 	end
     
+    cd ../usr_data
+	save(oup)
+	cd ../functions

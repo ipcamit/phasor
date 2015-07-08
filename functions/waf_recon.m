@@ -1,19 +1,19 @@
 
-function [ctf1d] = waf1d(df)
+function [ctf] = waf_recon(df,image_size)
 %waf- wave abberation function
 %   takes size of image as input ant returns wave abberatiuon function
 %   matrix as output. Assumes energy= 200kv, coma, higher order spherical
 %   abberation to be zero. Asks for defocus and azmuthal angle( for
 %   astigmatism), spherical abberation constant and chromatic abberation
 %   constant.
+
 cd ../usr_data
 load('datatem.mat','temdata');
 cd ../functions
-
-%figure;plot(X)
-
+%df=df*10^-9;
+%clear df1;
 %-----------------------------------------------------------
-    m=1024/temdata.binning;
+    m=image_size;
     Ca=temdata.ca;
     if(mod(m,2)==0)
      zro = m/2+0.5;
@@ -29,18 +29,22 @@ cd ../functions
 %-------------------------------------------------------
 df=df*10^-9;
 
-A1=0;ang=0;azmuth=0;% will be assigned after writing routine for astigmatism
+A1=0;ang=0;azmuth=0;
 X=pi* temdata.lambda*(df+(A1/2)*cos(2*(ang-azmuth))).*k.*k + 0.5*pi*temdata.lambda^3*temdata.cs.*k.*k.*k.*k;
 i=(-1)^.5;
-%MTF=gen_mtf(1024);
+%figure;plot(X)
+
+
+
 MTF=1;
-%figure;imshow(X,[]);
+
+
 Ec_spat=exp((-1*temdata.bet^2/(4*temdata.lambda^2))*((2*pi*temdata.lambda)*(df.*k+temdata.lambda^2*temdata.cs.*k.*k.*k)).*((2*pi*temdata.lambda)*(df.*k+temdata.lambda^2*temdata.cs.*k.*k.*k)));
-%figure;imshow(Ec_spat,[]);
+%figure;plot(Ec_spat)
 Ec_delta=exp(-1*temdata.delt^2*pi^2*temdata.lambda^2.*k.*k.*k.*k);
-%figure;imshow(Ec_delta,[]);
-ctf1d=MTF.*Ec_spat.*sin(X).*sin(X).*Ec_delta;
-%figure;imshow(ctf1d,[]);
+%figure;plot(Ec_delta)
+ctf=MTF.*Ec_spat.*exp(i.*X).*Ec_delta;
+
 
 
 %ctfr=0*ctf;

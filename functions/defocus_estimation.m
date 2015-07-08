@@ -42,17 +42,16 @@ function defocus_estimation_OpeningFcn(hObject, eventdata, handles, varargin)
 %-------------------------------------------------------
   load(handles.fname,'profile')
   cd ../functions
-  handles.img=flipud(stackfft(handles.imnumber).mix);
+  handles.img=flipud(stackfft(handles.imnumber).raw);
   handles.prof=profile(handles.imnumber).smth;
-  
+  global defocus;
   clear profile
   clear stackfft
-  %clear fftstack
-  
-  %load mic;
-  %handles.xaxis=mic.x;
-  % Update handles structure
+  set(handles.edit_min,'String',-10);
+  set(handles.edit_max,'String',10);
   guidata(hObject, handles);
+
+
 
 
 % --- Outputs from this function are returned to the command line.
@@ -61,56 +60,37 @@ function varargout = defocus_estimation_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 
 
-% --- Executes on button press in pushbutton1.
-function pushbutton1_Callback(hObject, eventdata, handles)
 
-  handles.yaxis=sin(handles.xaxis);
-  axes(handles.axes1)
-  hold on
-  plot(handles.xaxis,handles.yaxis)
-  guidata(hObject,handles);
-
-% --- Executes on button press in pushbutton2.
-function pushbutton2_Callback(hObject, eventdata, handles)
-
-  y=cos(handles.xaxis);
-  axes(handles.axes1)
-  hold on
-  plot(handles.xaxis,y)
-  guidata(hObject,handles);
 
 
 % --- Executes on slider movement.
 function slider1_Callback(hObject, eventdata, handles)
   
-  df=get(handles.slider1,'Value');
-  [ctf2d]=waf1d(df);
-  %load('/media/amit/E drive/tem/fft_profiles.mat','profile')
+ df=get(handles.slider1,'Value');
+ [ctf2d]=waf1d(df);
+ back=handles.prof;
+ a=max(handles.img(:));
+ [sx,sy]=size(handles.img);
+ handles.img(:,1:sx/2)=(a.*(ctf2d(:,1:sx/2)));
+ 
+ cla
+ 
+ % Flip the image upside down before showing it, as cordinate system changes in image and graph mode
+ size_k=max(size(handles.k));
+ imagesc([-max(handles.k(round(size_k/2),:)) max(handles.k(round(size_k/2),:))],[-2.5,3.5], flipud(handles.img));
+ colormap('gray');
+ 
+ hold on;
+ 
+ plot(handles.k(round(size_k/2),:),back+.3,'LineWidth',2,'Color',[0 .5 1])
+ plot(linspace(-handles.k(round(size_k/2),1),handles.k(round(size_k/2),1),size_k),ctf2d(round(size_k/2),:)+.5,'LineWidth',2,'Color',[1 1 0])
+ axis([-.9*10^10 .9*10^10 -.5 1.5]);
   
-  %load('/media/amit/E drive/tem/fft_profiles.mat','stackfft');
-  %profiles().raw=prof_im4/max(prof_im4(:));
-  back=handles.prof;
-  a=max(handles.img(:));
-  [sx,sy]=size(handles.img);
-  handles.img(:,1:sx/2)=(a.*(ctf2d(:,1:sx/2)));
-  
-  cla
-  
-  % Flip the image upside down before showing it
-  % Flip the image upside down before showing it
-  imagesc([-max(handles.k(:)) max(handles.k(:))], [-2.5 3.5], flipud(handles.img));
-   colormap('gray');
-  
-  hold on;
-  %plot(handles.k,yaxis*.9+.5,'LineWidth',2,'Color',[0 1 0])
-  plot(handles.k,back+.3,'LineWidth',2,'Color',[0 .5 1])
-  axis([-.75*10^10 .75*10^10 -.5 1.5]);
-   
-  % set the y-axis back to normal.
-  set(gca,'ydir','normal');
-  
-  set(handles.text1,'String',num2str(df));
-  guidata(hObject,handles)
+ % set the y-axis back to normal.
+ set(gca,'ydir','normal');
+ 
+ set(handles.text1,'String',num2str(df));
+ guidata(hObject,handles)
 
 % --- Executes during object creation, after setting all properties.
 function slider1_CreateFcn(hObject, eventdata, handles)
@@ -178,15 +158,9 @@ function edit_def_Callback(hObject, eventdata, handles)
   
   
   yaxis=waf1d(val);
-  %load('/media/amit/E drive/tem/fft_profiles.mat','profile')
-  
-  %load('/media/amit/E drive/tem/fft_profiles.mat','stackfft');
-  
-  %prof_im4=prof_im4/max(prof_im4(:));
   back=handles.prof;
   cla
   
-  % Flip the image upside down before showing it
   % Flip the image upside down before showing it
   imagesc([-max(handles.k(:)) max(handles.k(:))], [-1.5 1.5], flipud(handles.img.^.05));
    colormap('gray');
@@ -217,9 +191,9 @@ function edit_spherical_Callback(hObject, eventdata, handles)
   set(handles.edit_spherical,'String',a);
   a=str2num(a)*10^-3;
   temdata.cs=a;
-  save('datatem.mat');
+  save('datatem.mat','temdata','-append');
   cd ../functions
-  guidata(hObject,handles);
+  guidata(hObject,handles)
 
 function edit_spherical_CreateFcn(hObject, eventdata, handles)
 
@@ -238,7 +212,7 @@ function edit_scale_Callback(hObject, eventdata, handles)
   
   save('datatem.mat');
   cd ../functions
-  guidata(hObject,handles);
+  guidata(hObject,handles)
 
 function edit_scale_CreateFcn(hObject, eventdata, handles)
 
@@ -249,20 +223,27 @@ end
 
 
 function pushbutton3_Callback(hObject, eventdata, handles)
-  defocus(handles.imnumber)=get(handles.text1,'String');
-  defocus(handles.imnumber)=str2double(defocus(handles.imnumber));
-  cd ../usr_data
-  save('defocus.mat','defocus','-append')
-  handles.imnumber=handles.imnumber+1;
-  load(handles.fname)
-  %handles.img=im2double(im1);
+  global defocus;
+  defocus(handles.imnumber)=str2double(get(handles.text1,'String'));
+  %defocus(handles.imnumber)=str2double(defocus(handles.imnumber));
   
-  load('datatem.mat','handles.k')
-  load('img_fftstack.mat','profile')
-  cd ../functions
   
-  handles.img=(stackfft(imnumber).raw);
-  handles.prof=profile(imnumber).raw;
-  clear profile
-  clear stackfft
-  guidata(hObject,handles);
+  try
+    cd ../usr_data
+    handles.imnumber=handles.imnumber+1;
+    load(handles.fname)
+    load('fft_stack.mat','profile')
+    cd ../functions
+    handles.img=(stackfft(handles.imnumber).raw);
+    handles.prof=profile(handles.imnumber).smth;
+    clear profile
+    clear stackfft
+  catch
+    msgbox('Done with all images!! Running reconstruction!')
+    cd ../usr_data
+    save('defocus.mat','defocus') 
+    cd ../functions
+    reconstruction()
+  end
+
+guidata(hObject,handles)
