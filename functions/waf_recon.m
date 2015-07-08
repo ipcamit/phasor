@@ -36,7 +36,7 @@ i=(-1)^.5;
 
 
 
-MTF=1;
+MTF=gen_mtf(image_size);
 
 
 Ec_spat=exp((-1*temdata.bet^2/(4*temdata.lambda^2))*((2*pi*temdata.lambda)*(df.*k+temdata.lambda^2*temdata.cs.*k.*k.*k)).*((2*pi*temdata.lambda)*(df.*k+temdata.lambda^2*temdata.cs.*k.*k.*k)));

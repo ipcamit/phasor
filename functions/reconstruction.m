@@ -37,7 +37,7 @@ v=.5;
 W=zeros(m);
 V=zeros(m);
 [len,brd]=size(defocus);
-for(count=10:size_of_defocus-8)
+for(count=1:size_of_defocus)
   
    TF=waf_recon(defocus(count),image_size);
     %TF=Ec.*Ed.*TF;
@@ -48,7 +48,7 @@ end
 
 waveavg=zeros(m);
 brd
-for(count=10:size_of_defocus-8)
+for(count=1:size_of_defocus)
  count
   wavefftd=zeros(m);
     wavefftd=fftshift(fft2((wavefunc(count).ini)));

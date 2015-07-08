@@ -8,6 +8,7 @@ cd ../functions
 
 im1=imcrop(im1,[0 0 512/temdata.binning 512/temdata.binning]);
 im2=imcrop(im2,[0 0 512/temdata.binning 512/temdata.binning]);
+size(im2)
 %--------------------------------------------------------------------------------
 [m n]=size(im1);
 
@@ -37,9 +38,9 @@ a=fspecial('gaussian',[sx sy],25);
 %a=fftshift(a);
 x_fft=fftshift(fft2(im1));
 y_fft=fftshift(conj((fft2(im2))));
-display(size(a))
-display(size(b))
-display(size(x_fft))
+%display(size(a))
+%display(size(b))
+%display(size(x_fft))
 display(size(y_fft))
 
 pmat=fftshift(ifft2(ifftshift(a.*b.*x_fft.*y_fft./(abs(b.*x_fft.*y_fft)+.000001))));
