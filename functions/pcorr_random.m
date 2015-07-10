@@ -1,15 +1,25 @@
-function [pmat] = pcorr( im1,im2,d)
-%   pcorr: gives defocus compensated phase correlation between 2 images 
-%   just that nothing more, requires datatem2d.mat to contain data
+function [pmat] = pcorr_random( im1,im2,d)
+%   pcorr_random: gives defocus compensated phase correlation between 2 images 
+%   just that nothing more, requires datatem2d.mat to contain data 
 
 cd ../usr_data
 load('datatem.mat','temdata')
 cd ../functions
 
-im1=imcrop(im1,[0 0 512/temdata.binning 512/temdata.binning]);
-im2=imcrop(im2,[0 0 512/temdata.binning 512/temdata.binning]);
 %--------------------------------------------------------------------------------
 [m n]=size(im1);
+if m~=n
+    if m<n
+        im1=imcrop(im1,[0 0 m m]);
+        im2=imcrop(im2,[0 0 m m]);
+
+    else
+        im1=imcrop(im1,[0 0 n n]);
+        im2=imcrop(im2,[0 0 n n]);
+        m=n;
+    end
+end
+
 
 Ca=temdata.ca;
 cd ../functions
