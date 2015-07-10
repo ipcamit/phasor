@@ -3,35 +3,48 @@ function [] = reconstruction()
 
 %Alright lets first sort the images in order of defocus as sometimes the order changes
 %load defocus matrix
+
+
 cd ../usr_data
 load('defocus.mat','defocus')
-load('img_aligned_stack.mat','stack2')
+%load('img_aligned_stack.mat','stack2')
+load('trial.mat','stack_final')
 cd ../functions
 
 size_of_defocus=numel(defocus);
-defocus_sort_array=sortrows([linspace(1,size_of_defocus,size_of_defocus)',defocus'],-2)';
 
-for(count=1:size_of_defocus)
-    %count
-    stack2(count).img=wiener2(ham(stack2(count).raw),[2 3]);
-   
-    %size(stack2(count).img)
-    %waves(count).phase=stack2(count).img.*0;
-    wavefunc(count).ini=stack2(count).img.^.5;
-    %size(wavefunc(count).ini)
+%defocus_sort_array=sortrows([linspace(1,size_of_defocus,size_of_defocus)',defocus'],-2)';
+
+[m n]=size(stack_final(1).raw);
+
+if m~=n
+    if m<n
+      for count=1:size_of_defocus
+        img_stack(count).raw=imcrop(stack_final(count).raw,[0 0 m m]);
+      end        
+    else
+        for count=1:size_of_defocus
+          img_stack(count).raw=imcrop(stack_final(count).raw,[0 0 n n]);
+        end 
+        m=n;
+    end
 end
-image_size=max(size(stack2(1).img));
+for(count=1:size_of_defocus)
+    
+    img_stack(count).img=wiener2(ham(img_stack(count).raw),[2 3]);
+    wavefunc(count).ini=img_stack(count).img.^.5;
+end
+
+image_size=max(size(img_stack(1).img));
 %lf = fft2([0 1 0; 1 -4 1; 0 1 0],image_size,image_size);
-[m n]=size(stack2(1).img);
-%savedat2d(m);
-Loop1=1;
+
 
 %propogation to zero defocus
 phase=0;
 %------------------------------------------------------------------------------------
 
 m
-v=.5;
+v=.3;
 
 %******W&V*******
 W=zeros(m);
@@ -40,10 +53,8 @@ V=zeros(m);
 for(count=1:size_of_defocus)
   
    TF=waf_recon(defocus(count),image_size);
-    %TF=Ec.*Ed.*TF;
     W=W+TF.*conj(TF);
     V=V+TF.*TF;
-   % end
 end
 
 waveavg=zeros(m);
@@ -72,45 +83,4 @@ savename=strcat('result','_',num2str(current_time(3)),'_',num2str(current_time(2
 save(savename);
 cd ../functions
 end
-
-
-
-
-
-
-%for(iteration=5:size_of_defocus-14)
-%  iteration
-%  waveavg=0;
-%    for(count=1:size_of_defocus)
-%      % count
-%        wavefftd=0;
-%        wavefftd=fftshift(fft2(wavefunc(count).ini.*exp(i*phase)));
-%        %wafefftd=wavefftd/max(wavefftd(:));
-%       % wavefft(count).amp=abs(wavefftd);
-%       % wavefft(count).phase=angle(wavefftd);
-%        TF=waf_recon(defocus(count),image_size);
-%       % size(wavefunc(count).ini)
-%        %size(wavefftd)
-%       size(TF)
-%       size(lf)
-%       
-%        wavefft(count).def0=wavefftd.*(TF./(TF.*TF +lf.*lf*.0001));
-%        waveavg=waveavg+wavefft(count).def0;
-%        
-%    end
-%  loop2=1;
-%  waveavg=waveavg./size_of_defocus;
-%  SSE(5:size_of_defocus-14)=0;
-%    for(count=15:size_of_defocus-4)
-%       % count
-%       TF=waf_recon(defocus(count),image_size);
-%        wavecalc(count).def=waveavg.*TF;
-%        wavediff(count).diff=ifft2(wavecalc(count).def)-wavefunc(count).ini;
-%        wavediff(count).diff=(wavediff(count).diff.*wavediff(count).diff);
-%        SSE(count)=SSE(count)+sum(wavediff(count).diff(:))/sum(stack2(count).img( :) );
-%  end
-%  SSEAVG=sum(SSE)/size_of_defocus;
-%  loop3=1;
-%  phase=atan2(angle(ifft2(waveavg)),abs(ifft2(waveavg)));
-%  end
 

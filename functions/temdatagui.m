@@ -117,7 +117,6 @@ function pushbutton1_Callback(hObject, eventdata, handles)
   %num=str2double(inputdlg('enter total number of images')); 
   filelist=dir(path);
   filelist.name
-  if ispc
     slash='\'; %to maintain compatibility in linux and window systems. yet to be checked in linux
   else
     slash='/';
