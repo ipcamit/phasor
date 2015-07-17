@@ -2,7 +2,7 @@ function varargout = imagealign_gui(varargin)
 % IMAGEALIGN_GUI MATLAB code for imagealign_gui.fig
 
 
-% Last Modified by GUIDE v2.5 13-Mar-2015 16:56:32
+% Last Modified by GUIDE v2.5 10-Jul-2015 18:07:32
 
 % Begin initialization code - DO NOT EDIT
 	gui_Singleton = 1;
@@ -52,28 +52,28 @@ function varargout = imagealign_gui_OutputFcn(hObject, eventdata, handles)
 
 
 % --- Executes on button press in pushbutton1.
-function pushbutton1_Callback(hObject, eventdata, handles)
-	h=msgbox('Please select area of image you want to reconstruct (in image 1)');
-	uiwait(h);
-	hfindROI = findobj(handles.axes1,'Type','imrect');
-	delete(hfindROI)
-	
-	
-	hROI = imrect(handles.axes1,[10 10 100 100]); %copied from stackexchange!!!
-	setFixedAspectRatioMode(hROI,1); 
-	%position = wait(h);
-	axes(handles.axes2)
-	rectangle('Position',[10 10 100 100],'EdgeColor','y','LineWidth',2)
-	id = addNewPositionCallback(hROI,@(s,e) GetROIPosition(hROI,hObject, eventdata, handles));
-		
-	
-	handles.position = wait(hROI);
-  	handles.stack(1).crop = imcrop(handles.stack.stack(1).raw,handles.position);
-	figure;set(gcf,'name','Cropped Image');imshow(handles.stack(1).crop);
-	guidata(hObject,handles)
-
-	%[cropped_image,crop_coordinates]=imcrop(handles.stack.stack(1).raw);
-%--------------------------------------------------------------------------------
+%function pushbutton1_Callback(hObject, eventdata, handles)
+%	h=msgbox('Please select area of image you want to reconstruct (in image 1)');
+%	uiwait(h);
+%	hfindROI = findobj(handles.axes1,'Type','imrect');
+%	delete(hfindROI)
+%	
+%	
+%	hROI = imrect(handles.axes1,[10 10 100 100]); %copied from stackexchange!!!
+%	setFixedAspectRatioMode(hROI,1); 
+%	%position = wait(h);
+%	axes(handles.axes2)
+%	rectangle('Position',[10 10 100 100],'EdgeColor','y','LineWidth',2)
+%	id = addNewPositionCallback(hROI,@(s,e) GetROIPosition(hROI,hObject, eventdata, handles));
+%		
+%	
+%	handles.position = wait(hROI);
+%  	handles.stack(1).crop = imcrop(handles.stack.stack(1).raw,handles.position);
+%	figure;set(gcf,'name','Cropped Image');imshow(handles.stack(1).crop);
+%	guidata(hObject,handles)
+%
+%	%[cropped_image,crop_coordinates]=imcrop(handles.stack.stack(1).raw);
+%%--------------------------------------------------------------------------------
 
 
 
@@ -84,7 +84,8 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 	df_rng=str2double(inputdlg('Please enter approximate maximum defocus iteration'));
 	relative_def('img_stack.mat','rel_def.mat',df_rng)
 	position=handles.position;
-	im_align('img_stack.mat','img_aligned_stack.mat',round(position))
+	im_align_self()
+	%im_align('img_stack.mat','img_aligned_stack.mat',round(position))
 	set(handles.pushbutton3,'Visible','on')
 	guidata(hObject,handles)
 %--------------------------------------------------------------------------------
@@ -107,10 +108,10 @@ function pushbutton3_Callback(hObject, eventdata, handles)
 
 
 % --- Executes on button press in pushbutton4.
-function pushbutton4_Callback(hObject, eventdata, handles)
-	imagealign_gui
-	pushbutton1_Callback(hObject, eventdata, handles)
-	guidata(hObject,handles)
+%function pushbutton4_Callback(hObject, eventdata, handles)
+%	imagealign_gui
+%	pushbutton1_Callback(hObject, eventdata, handles)
+%	guidata(hObject,handles)
 %--------------------------------------------------------------------------------
 
 

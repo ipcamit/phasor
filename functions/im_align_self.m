@@ -1,8 +1,7 @@
 function [] =img_align_self()
-    cd ../usr_data
-    load('img_stack.mat')
-    load('rel_def.mat','defocus')
-    cd ../functions
+    
+    load('../usr_data/img_stack.mat')
+    load('../usr_data/rel_def.mat','defocus')
     %display('this is working function')
     %msg=msgbox('Aligning images, please wait...');
     num=max(size(stack));
@@ -123,7 +122,7 @@ function [] =img_align_self()
         stack_final(count).raw=interp2(current_img(non_zero_row(1):non_zero_row(end),non_zero_col(1):non_zero_col(end)),-2);
     end
     clear('stack_intermediate');clear('stack_resized');clear('stack3');clear('stack');clear('current_img');clear('all');
-    save('../usr_data/trial.mat')
+    save('../usr_data/img_aligned_stack.mat')
     
 end
 

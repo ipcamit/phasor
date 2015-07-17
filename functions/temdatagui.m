@@ -117,6 +117,7 @@ function pushbutton1_Callback(hObject, eventdata, handles)
   %num=str2double(inputdlg('enter total number of images')); 
   filelist=dir(path);
   filelist.name
+  if ispc  
     slash='\'; %to maintain compatibility in linux and window systems. yet to be checked in linux
   else
     slash='/';
@@ -132,9 +133,7 @@ function pushbutton1_Callback(hObject, eventdata, handles)
     end
   end
   imgNumber=imgNumber-1;
-  cd ../usr_data
-  save('img_stack.mat','stack')
-  cd ../functions
+  save('../usr_data/img_stack.mat','stack')
   guidata(hObject,handles)
 
 %-----------------------------------------------------------------------------------------------------------------------------
@@ -186,9 +185,7 @@ function pushbutton3_Callback(hObject, eventdata, handles)
   temdata.lambda=2.74*10^(-12);
   if (isfield(temdata,'cs'))&(isfield(temdata,'bet'))&(isfield(temdata,'delt'))
     temdata.ca=temdata.ca*temdata.binning;
-    cd ../usr_data
-    save('datatem.mat','temdata')
-    cd ../functions
+    save('../usr_data/datatem.mat','temdata')
   else
     msgbox('Please eneter proper value for coefficients and press save again')
   end

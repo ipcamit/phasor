@@ -5,11 +5,9 @@ function [] = reconstruction()
 %load defocus matrix
 
 
-cd ../usr_data
-load('defocus.mat','defocus')
+load('../usr_data/defocus.mat','defocus')
 %load('img_aligned_stack.mat','stack2')
-load('trial.mat','stack_final')
-cd ../functions
+load('/usr_data/img_aligned_stack.mat','stack_final')
 
 size_of_defocus=numel(defocus);
 
@@ -76,11 +74,8 @@ for(count=1:size_of_defocus)
     waveavg=waveavg+wavefft(count).def0;
     %end
 end
-
-cd ../usr_data
 current_time=clock;
-savename=strcat('result','_',num2str(current_time(3)),'_',num2str(current_time(2)),'_',num2str(current_time(1)),'_',num2str(current_time(4)),'_',num2str(current_time(5)),'_',num2str(round(current_time(6))),'_','.mat');
+savename=strcat('../usr_data/result','_',num2str(current_time(3)),'_',num2str(current_time(2)),'_',num2str(current_time(1)),'_',num2str(current_time(4)),'_',num2str(current_time(5)),'_',num2str(round(current_time(6))),'_','.mat');
 save(savename);
-cd ../functions
 end
 
