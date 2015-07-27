@@ -77,14 +77,14 @@ function slider1_Callback(hObject, eventdata, handles)
  
  % Flip the image upside down before showing it, as cordinate system changes in image and graph mode
  size_k=max(size(handles.k));
- imagesc([-max(handles.k(round(size_k/2),:)) max(handles.k(round(size_k/2),:))],[-2.5,3.5], flipud(handles.img));
+ imagesc([-max(handles.k(round(size_k/2),:)) max(handles.k(round(size_k/2),:))],[-3.5,4.5], flipud(handles.img));
  colormap('gray');
  
  hold on;
  
  plot(handles.k(round(size_k/2),:),back+.3,'LineWidth',2,'Color',[0 .5 1])
  plot(linspace(-handles.k(round(size_k/2),1),handles.k(round(size_k/2),1),size_k),ctf2d(round(size_k/2),:)+.5,'LineWidth',2,'Color',[1 1 0])
- axis([-.9*10^10 .9*10^10 -.5 1.5]);
+ axis([-.45*10^10 .45*10^10 -.5 1.5]);
   
  % set the y-axis back to normal.
  set(gca,'ydir','normal');

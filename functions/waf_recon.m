@@ -32,7 +32,7 @@ df=df*10^-9;
 A1=0;ang=0;azmuth=0;
 X=pi* temdata.lambda*(df+(A1/2)*cos(2*(ang-azmuth))).*k.*k + 0.5*pi*temdata.lambda^3*temdata.cs.*k.*k.*k.*k;
 i=(-1)^.5;
-%figure;plot(X)
+
 
 
 
@@ -40,21 +40,12 @@ MTF=gen_mtf(image_size);
 
 
 Ec_spat=exp((-1*temdata.bet^2/(4*temdata.lambda^2))*((2*pi*temdata.lambda)*(df.*k+temdata.lambda^2*temdata.cs.*k.*k.*k)).*((2*pi*temdata.lambda)*(df.*k+temdata.lambda^2*temdata.cs.*k.*k.*k)));
-%figure;plot(Ec_spat)
+
 Ec_delta=exp(-1*temdata.delt^2*pi^2*temdata.lambda^2.*k.*k.*k.*k);
-%figure;plot(Ec_delta)
+
 ctf=MTF.*Ec_spat.*exp(i.*X).*Ec_delta;
 
 
-
-%ctfr=0*ctf;
-%for(c1=1:m)
- %   for(c2=1:m)
-  %      if(anglectf(c1,c2)<=.15 && anglectf(c1,c2)>=-.15)
-   %         ctfr(c1,c2)=1;
-    %    end
-   % end
-%end
 
 end
 

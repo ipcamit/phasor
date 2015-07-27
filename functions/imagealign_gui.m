@@ -86,7 +86,6 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 	position=handles.position;
 	im_align_self()
 	%im_align('img_stack.mat','img_aligned_stack.mat',round(position))
-	set(handles.pushbutton3,'Visible','on')
 	guidata(hObject,handles)
 %--------------------------------------------------------------------------------
 

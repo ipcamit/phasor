@@ -7,7 +7,7 @@ function [] = reconstruction()
 
 load('../usr_data/defocus.mat','defocus')
 %load('img_aligned_stack.mat','stack2')
-load('/usr_data/img_aligned_stack.mat','stack_final')
+load('../usr_data/img_aligned_stack.mat','stack_final')
 
 size_of_defocus=numel(defocus);
 

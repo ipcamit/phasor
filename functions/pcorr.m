@@ -6,9 +6,8 @@ cd ../usr_data
 load('datatem.mat','temdata')
 cd ../functions
 
-im1=imcrop(im1,[0 0 512/temdata.binning 512/temdata.binning]);
-im2=imcrop(im2,[0 0 512/temdata.binning 512/temdata.binning]);
-size(im2)
+im1=imcrop(im1,[0 0 min(size(im1)) min(size(im1))]);
+im2=imcrop(im2,[0 0 min(size(im1)) min(size(im1))]);
 %--------------------------------------------------------------------------------
 [m n]=size(im1);
 
