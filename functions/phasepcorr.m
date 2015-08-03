@@ -1,14 +1,23 @@
-function [pmat] = phasepcorr( im1,im2,d)
-%pcorr: gives phase compensated phase correlation between 2 images 
-%   just that nothing more. one more thing u have to supply defocus as
-%   arguement for using it in phase compensation
+function [pmat] = phasepcorr( im1,varargin)
+%   phasepcorr: gives defocus compensated phase correlation between 2 images 
+%   just that nothing more, requires datatem2d.mat to contain data
+
+if length(varargin)==1
+    d=varargin{1};
+    scaling_factor=1;
+else
+    d=varargin{1};
+    scaling_factor=2;
+end
+load('../usr_data/datatem.mat','temdata')
 
 
+im1=imcrop(im1,[0 0 min(size(im1)) min(size(im1))]);
+%--------------------------------------------------------------------------------
 [m n]=size(im1);
-cd ../usr_data
-load('datatem.mat','temdata')
-cd ../functions
-Ca=temdata.ca;
+
+Ca=temdata.ca/scaling_factor;
+
 if(mod(m,2)==0)
  zro = m/2+0.5;
  ind = m/2;
@@ -23,20 +32,17 @@ k = r./(m*Ca);
 %------------------------------------------------------------------------------------
 [sx,sy]=size(im1);
 
-%d=d*10^-9;
-%gamma=pi*d*2.51*10^-12*(k.*k);
+
+gamma=0.5*d*temdata.lambda*(k.*k)+0.25*temdata.cs*temdata.lambda^3*k.^4;
 %b=cos(gamma);
-%%figure;imshow(b,[]);
+%b(b==0)=0.00001;
 %c=fftshift(b);
-%a=1;
-%a=fftshift(fspecial('gaussian',[1024 1024],500));
 
-%x=ham((im1));
-%y=ham((im2));
-%x_fft=fft2(ham((im1)));
-%figure;imshow(x_fft.^.02,[]);
-%y_fft=conj((fft2(ham((im2)))));
-%figure;imshow(y_fft.^.02,[]);
+x_fft=fft2(im1);
+max(gamma(:))
+max((x_fft(:)))
+min(gamma(:))
+min((x_fft(:)))
 
-pmat=ifftshift(ifft2(fftshift(fspecial('gaussian',[1024 1024],500)).*((fftshift(cos(pi*d*10^-9*2.51*10^-12*(k.*k))).*fft2(ham((im1))).*conj((fft2(ham((im2))))))./abs(fftshift(cos(pi*d*10^-9*2.51*10^-12*(k.*k))).*(fft2(ham((im1))).*conj((fft2(ham((im2))))))+.000000001))));
+pmat=-cos(x_fft+conj(x_fft)+2*gamma);
 end

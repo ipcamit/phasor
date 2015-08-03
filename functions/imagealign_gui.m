@@ -85,6 +85,10 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 	relative_def('img_stack.mat','rel_def.mat',df_rng)
 	position=handles.position;
 	im_align_self()
+	h=msgbox('Images aligned. Generating FFT pattern for all images, it might take a little while');
+	fft_profiler('img_stack.mat','fft_stack.mat')
+	close(h)
+	defocus_estimation
 	%im_align('img_stack.mat','img_aligned_stack.mat',round(position))
 	guidata(hObject,handles)
 %--------------------------------------------------------------------------------

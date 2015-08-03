@@ -39,6 +39,8 @@ function defocus_estimation_OpeningFcn(hObject, eventdata, handles, varargin)
   [ix,jx] = meshgrid(1:m); 
   r = ((ix-zro).^2 + (jx-zro).^2).^(0.5); 
   handles.k = r./(m*Ca);
+  handles.ca=temdata.ca;
+  handles.binning=temdata.binning;
 %-------------------------------------------------------
   load(handles.fname,'profile')
   cd ../functions
@@ -74,18 +76,33 @@ function slider1_Callback(hObject, eventdata, handles)
  handles.img(:,1:sx/2)=(a.*(ctf2d(:,1:sx/2)));
  
  cla
- 
  % Flip the image upside down before showing it, as cordinate system changes in image and graph mode
  size_k=max(size(handles.k));
- imagesc([-max(handles.k(round(size_k/2),:)) max(handles.k(round(size_k/2),:))],[-3.5,4.5], flipud(handles.img));
+ 
+ if handles.ca==12.75*10^-12*handles.binning
+   imagesc([-max(handles.k(round(size_k/2),:)) max(handles.k(round(size_k/2),:))],[-1.5,2.5], flipud(handles.img));
+ elseif handles.ca==15.14*10^-12*handles.binning
+   imagesc([-max(handles.k(round(size_k/2),:)) max(handles.k(round(size_k/2),:))],[-2.5,3.5], flipud(handles.img));
+ elseif handles.ca==17.93*10^-12*handles.binning
+   imagesc([-max(handles.k(round(size_k/2),:)) max(handles.k(round(size_k/2),:))],[-3.5,4.5], flipud(handles.img));
+ end
+ 
  colormap('gray');
  
  hold on;
  
  plot(handles.k(round(size_k/2),:),back+.3,'LineWidth',2,'Color',[0 .5 1])
  plot(linspace(-handles.k(round(size_k/2),1),handles.k(round(size_k/2),1),size_k),ctf2d(round(size_k/2),:)+.5,'LineWidth',2,'Color',[1 1 0])
- axis([-.45*10^10 .45*10^10 -.5 1.5]);
-  
+ 
+ if handles.ca==12.75*10^-12*handles.binning
+   axis([-.75*10^10 .75*10^10 -0.5 1.5]);
+ elseif handles.ca==15.14*10^-12*handles.binning
+   axis([-.75*10^10 .75*10^10 -0.5 1.5]);
+  elseif handles.ca==17.93*10^-12*handles.binning
+   axis([-.75*10^10 .75*10^10 -1.0 2.0]);
+ end
+ 
+%axis([-.45*10^10 .45*10^10 -.5 1.5]); 
  % set the y-axis back to normal.
  set(gca,'ydir','normal');
  

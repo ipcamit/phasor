@@ -32,14 +32,16 @@ function [] =img_align_self()
         
         end
         blank_pad=zeros(3*max(abs(img_cord(:)))+num_row,3*max(abs(img_cord(:)))+num_col);
-        for count=1:num
+        img_cord
+        %if sum(img_cord(:))~=0
+            for count=1:num
             stack3(count).raw=blank_pad+(-1)*(num+1);
             stack3(count).raw(...
-                (round(1.5*max(abs(img_cord(:))))+img_cord(count,1)):(round(1.5*max(abs(img_cord(:))))+img_cord(count,1)+num_row-1),...
-                (round(1.5*max(abs(img_cord(:))))+img_cord(count,2)):(round(1.5*max(abs(img_cord(:))))+img_cord(count,2)+num_col-1))=...
+                (round(1.5*max(abs(img_cord(:))))+max([1 img_cord(count,1)])):(round(1.5*max(abs(img_cord(:))))+max([1 img_cord(count,1)])+num_row-1),...
+                (round(1.5*max(abs(img_cord(:))))+max([1 img_cord(count,2)])):(round(1.5*max(abs(img_cord(:))))+max([1 img_cord(count,2)])+num_col-1))=...
             stack(count).raw;
-        end
-        
+            end
+        %end
         mask=blank_pad;
     
         for count=1:num
@@ -55,6 +57,7 @@ function [] =img_align_self()
             stack2(count).raw=stack3(count).raw(non_zero_row(1):non_zero_row(end),non_zero_col(1):non_zero_col(end));
         end
         stack=stack2;
+        figure;imshow(stack(1).raw,[])
         if max(img_cord(:))<=1
             loop_condition=false;
         end
@@ -113,16 +116,16 @@ function [] =img_align_self()
             stack_intermediate(count).raw=blank_pad+(-1)*(num+1);
             
             stack_intermediate(count).raw(...
-                (round(1.5*max(abs(img_cord(:))))+img_cord(count,1)):(round(1.5*max(abs(img_cord(:))))+img_cord(count,1)+num_row-1),...
-                (round(1.5*max(abs(img_cord(:))))+img_cord(count,2)):(round(1.5*max(abs(img_cord(:))))+img_cord(count,2)+num_col-1))=...
+                (round(1.5*max(abs(img_cord(:))))+max([1, img_cord(count,1)])):(round(1.5*max(abs(img_cord(:))))+max([1, img_cord(count,1)])+num_row-1),...
+                (round(1.5*max(abs(img_cord(:))))+max([1, img_cord(count,2)])):(round(1.5*max(abs(img_cord(:))))+max([1, img_cord(count,2)])+num_col-1))=...
             stack_resized(count).raw;
-            %dlmwrite(strcat('../usr_data/','img',num2str(count),'.txt'),stack_intermediate)%required to save ram
+            
         end
         
         display('buffered images written to disk')
         mask=blank_pad;
         for count=1:num
-            current_img=stack_intermediate(count).raw;%dlmread(strcat('../usr_data/','img',num2str(count),'.txt'));
+            current_img=stack_intermediate(count).raw;
             mask=mask+current_img;
         end
     
@@ -135,7 +138,7 @@ function [] =img_align_self()
         clear('stack_resized');
 
         for count=1:num
-            current_img=stack_intermediate(count).raw;%dlmread(strcat('../usr_data/','img',num2str(count),'.txt'));
+            current_img=stack_intermediate(count).raw;
             stack_final(count).raw=current_img(non_zero_row(1):non_zero_row(end),non_zero_col(1):non_zero_col(end));
         end
         
@@ -143,12 +146,14 @@ function [] =img_align_self()
            loop_condition=false;
        end
        stack_resized=stack_final;
+       figure;imshow(stack_final(1).raw,[]);
+       figure;imshow(stack_final(5).raw,[])
        clear('stack_final');
        alignment_round
        alignment_round=alignment_round+1;
    end
    for count=1:num
-            current_img=stack_intermediate(count).raw;%dlmread(strcat('../usr_data/','img',num2str(count),'.txt'));
+            current_img=stack_intermediate(count).raw;
             stack_final(count).raw=interp2(current_img(non_zero_row(1):non_zero_row(end),non_zero_col(1):non_zero_col(end)),-2);
         end
     clear('stack_intermediate');clear('stack_resized');clear('current_img');
