@@ -1,0 +1,41 @@
+\documentclass[12pt]{scrartcl}
+
+%\usepackage{subfiles}
+\usepackage{amsmath}
+\usepackage{scrextend}
+\usepackage{titling}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage[export]{adjustbox} %for right alignment of gigure
+\usepackage{wrapfig}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,arrows}
+
+%-----------------------------------------------------
+\renewcommand{\abstractname}{\centerline{\textbf{Abstract}}}
+\newcommand{\blankline}{\hfill\break}
+\graphicspath{{./figures/}}
+\renewcommand*\descriptionlabel[1]{\hspace\leftmargin$#1$} %for where discriptions of equations http://tex.stackexchange.com/questions/36500/how-to-provide-a-definition-for-symbols-in-a-latex-math-equation
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width = 3cm, minimum height = 1cm, text centered, draw=black, text width=5cm, fill=red!30]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered,trapezium stretches=true,  draw=black, text width=10cm, fill=blue!30]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, text width=10cm, fill=orange!30]
+\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, text width=10cm, fill=green!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+%------------------------------------------------------
+\title{PHASOR: A Exit Wave Phase Reconstruction Code in MATLAB\textsuperscript{\textregistered}}
+\author{Amit Gupta\\{Supervised by: Prof. S. Vasudevan}\\Dept. of Inorganic and Physical Chem.\\Indian Institute of Science\\\texttt{amit@ipc.iisc.ernet.in}}
+\date{}
+
+\onehalfspacing
+
+\begin{document}
+    \bibliographystyle{unsrt}
+    {\Huge{\maketitle}}
+    \newpage
+    \input{abstract}
+    \include{introduction}
+    \include{theory}
+    \include{implementation}
+    \bibliography{references}
+\end{document}
