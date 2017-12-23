@@ -9,4 +9,4 @@ Would try to make it full fledged program when I get time.
 
 PR welcome!
 
-![Work in Progress](http://imgs.xkcd.com/comics/automation.png)
+
